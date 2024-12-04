@@ -53,3 +53,11 @@ function displayArtists(artists) {
         output.appendChild(artistDiv);
     });
 }
+
+// Event listener for the search button
+document.getElementById('searchButton').addEventListener('click', () => {
+    const artistName = document.getElementById('search').value.trim();
+    if (artistName) {
+        searchArtist(artistName);
+    }
+});
