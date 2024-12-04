@@ -16,3 +16,40 @@ async function getAccessToken() {
     const data = await response.json();
     return data.access_token;
 }
+
+// Function to search for an artist
+async function searchArtist(artistName) {
+    const token = await getAccessToken();
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${artistName}&type=artist`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+
+    const data = await response.json();
+    displayArtists(data.artists.items);
+}
+
+// Function to display artist information
+function displayArtists(artists) {
+    const output = document.getElementById('output');
+    output.innerHTML = ''; // Clear previous results
+
+    if (artists.length === 0) {
+        output.innerHTML = '<p>No artists found.</p>';
+        return;
+    }
+
+    artists.forEach(artist => {
+        const artistDiv = document.createElement('div');
+        artistDiv.classList.add('artist-card');
+        artistDiv.innerHTML = `
+            <h2>${artist.name}</h2>
+            <p>Followers: ${artist.followers.total.toLocaleString()}</p>
+            <p>Genres: ${artist.genres.join(', ') || 'N/A'}</p>
+            <img src="${artist.images[0]?.url || 'https://via.placeholder.com/150'}" alt="${artist.name}" width="200">
+        `;
+        output.appendChild(artistDiv);
+    });
+}
